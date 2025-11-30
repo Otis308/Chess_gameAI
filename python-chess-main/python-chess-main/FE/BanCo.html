@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cờ Vua Online</title>
+    <link href="style.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div>
+      <a
+        href="http://127.0.0.1:61236/python-chess-main/python-chess-main/FE/TrangChu.html"
+        ><button
+          class="button btn-secondary"
+          onclick="showScreen('menu-screen')"
+        >
+          ← Quay lại
+        </button></a
+      >
+    </div>
+    <div id="app-container">
+      <!-- Bàn cờ chính -->
+      <div id="main-content">
+        <div id="chessboard" class="board"></div>
+      </div>
+
+      <!-- Sidebar -->
+      <div id="sidebar">
+        <!-- Nút điều khiển -->
+        <div class="control-row">
+          <button id="btn-undo" class="control-button">Quay lại</button>
+          <button id="btn-restart" class="control-button">Chơi lại</button>
+          <button id="btn-rules" class="control-button">📜 Luật chơi</button>
+        </div>
+
+        <!-- Thời gian -->
+        <div class="sidebar-section">
+          <h4>Thiết lập thời gian</h4>
+          <div class="time-row">
+            <button id="btn-time-up" class="small-btn">▲</button>
+            <span id="timer-display">5:00</span>
+            <button id="btn-time-down" class="small-btn">▼</button>
+          </div>
+          <div class="time-control-row">
+            <button id="btn-time-start" class="start-btn">Bắt đầu</button>
+            <button id="btn-time-pause" class="start-btn">Tạm dừng</button>
+            <button id="btn-time-reset" class="start-btn">Khôi phục</button>
+          </div>
+        </div>
+
+        <!-- AI & Gợi ý -->
+        <div class="sidebar-section">
+          <label for="ai-level" style="font-size: 18px; font-weight: bold"
+            >Chọn cấp độ AI:</label
+          >
+          <select
+            id="ai-level"
+            style="
+              width: 100%;
+              padding: 10px;
+              font-size: 16px;
+              margin-top: 10px;
+              border-radius: 8px;
+            "
+          >
+            <option value="1">⭐ Nhập môn</option>
+            <option value="2" selected>⭐⭐ Thành thạo</option>
+            <option value="3">⭐⭐⭐ Cao thủ</option>
+            <option value="4">⭐⭐⭐⭐ Kiện tướng</option>
+          </select>
+
+          <div class="toggle-container">
+            <span>Gợi ý nước đi</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-hint" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Quân bị bắt -->
+        <div class="captured-section">
+          <div class="captured-column">
+            <h4>Quân trắng mất</h4>
+            <div id="captured-white" class="captured-pieces"></div>
+          </div>
+          <div class="captured-column">
+            <h4>Quân đen mất</h4>
+            <div id="captured-black" class="captured-pieces"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POPUP Chọn màu -->
+    <div id="chooseColorModal" class="modal">
+      <div class="modal-content">
+        <h3>Chọn màu quân cờ của bạn</h3>
+        <button id="chooseWhite" class="color-btn">Trắng</button>
+        <button id="chooseBlack" class="color-btn">Đen</button>
+      </div>
+    </div>
+
+    <!-- Modal luật chơi -->
+    <div id="rules-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>📜 Luật Chơi Cờ Vua</h2>
+        <ul>
+          <li><b>1. Nguyên tắc di chuyển</b></li>
+          <li>♟ <b>Tốt</b>: Đi thẳng, ăn chéo, lượt đầu đi 2 ô.</li>
+          <li>♞ <b>Mã</b>: Đi hình chữ L.</li>
+          <li>♝ <b>Tượng</b>: Đi chéo.</li>
+          <li>♜ <b>Xe</b>: Đi thẳng hoặc ngang.</li>
+          <li>♛ <b>Hậu</b>: Đi mọi hướng.</li>
+          <li>♚ <b>Vua</b>: Đi 1 ô, không vào thế chiếu.</li>
+          <li><b>Mục tiêu:</b> Chiếu bí Vua đối thủ.</li>
+          <li><b>2. Quy luật đặc biệt</b></li>
+          <li>- Phong cấp: Tốt đến cuối bàn được phong Hậu, Xe, Tượng, Mã.</li>
+          <li>
+            - Bắt tốt qua đường: Khi tốt đi 2 ô từ đầu, đối phương có thể ăn qua
+            đường.
+          </li>
+          <li><b>3. Cách ăn quân và kết thúc ván cờ</b></li>
+          <li>
+            - Chiếu tướng: Vua bị đe dọa, phải di chuyển hoặc cắt đường chiếu.
+          </li>
+          <li>
+            - Chiếu bí: Vua bị chiếu và không còn nước đi, đối phương thắng.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Modal hết thời gian -->
+    <div id="timeup-modal" class="modal">
+      <div class="modal-content">
+        <span id="closeTimeupModal" class="close">&times;</span>
+        <h3>Hết thời gian!</h3>
+        <p>Timer sẽ được đặt lại 5:00 và tiếp tục chạy.</p>
+      </div>
+    </div>
+
+    <div id="aiMoveText"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
